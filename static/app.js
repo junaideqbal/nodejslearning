@@ -9,7 +9,7 @@ const mockData = [
 const populateProducts =async() => {
   const products = document.querySelector('#products')
   products.innerHTML = ''
-	const res = await fetch(API)
+	const res = await fetch(`${API}/${category}`)
 	const data = await res.json()
   for (const product of data) {
     const item = document.createElement('product-item')
@@ -23,8 +23,10 @@ const populateProducts =async() => {
   }
 }
 
-document.querySelector('#fetch').addEventListener('click', async () => {
-  await populateProducts()
+const category = document.querySelector('#category')
+
+category.addEventListener('input', async ({ target }) => {
+  await populateProducts(target.value)
 })
 
  
@@ -32,7 +34,7 @@ document.querySelector('#fetch').addEventListener('click', async () => {
 customElements.define('product-item', class Item extends HTMLElement {
   constructor() {
     super()
-    const itemTmpl = document.querySelector('#item').content.cloneNode(true)
-    this.attachShadow({mode: 'open'}).appendChild(itemTmpl)
+    const itemTmpl = document.querySelector('#item').content
+    this.attachShadow({mode: 'open'}).appendChild(itemTmpl.cloneNode(true))
   }
 })
